@@ -1,0 +1,9 @@
+com\acme\web\services\unit\tests\CageTests.class
+com\acme\web\services\unit\tests\UserTests.class
+com\acme\web\services\unit\tests\BreederTests.class
+com\acme\web\services\unit\tests\AdvisorTests.class
+com\acme\web\services\unit\tests\ResourceTests.class
+com\acme\web\services\unit\tests\ExpenseTests.class
+com\acme\web\services\unit\tests\PublicationTests.class
+com\acme\web\services\WebServicesApplicationTests.class
+com\acme\web\services\unit\tests\AppointmentTests.class
