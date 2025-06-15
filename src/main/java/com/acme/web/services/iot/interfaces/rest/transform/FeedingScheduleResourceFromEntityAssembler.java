@@ -14,7 +14,7 @@ public class FeedingScheduleResourceFromEntityAssembler {
                 entity.getCage().getId(),
                 entity.getMorningTime().toString(),
                 entity.getEveningTime().toString(),
-                false // applyToAll solo se usa en entrada, nunca en respuesta
+                false
         );
     }
 }

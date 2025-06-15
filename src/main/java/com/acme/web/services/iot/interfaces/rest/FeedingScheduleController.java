@@ -1,18 +1,23 @@
 package com.acme.web.services.iot.interfaces.rest;
 
 import com.acme.web.services.iot.domain.model.aggregates.FeedingSchedule;
+import com.acme.web.services.iot.domain.model.commands.HandleUpdateAllSchedules;
 import com.acme.web.services.iot.domain.services.FeedingScheduleCommandService;
 import com.acme.web.services.iot.domain.services.FeedingScheduleQueryService;
 import com.acme.web.services.iot.interfaces.rest.resources.FeedingScheduleResource;
+import com.acme.web.services.iot.interfaces.rest.resources.GlobalScheduleUpdateResource;
 import com.acme.web.services.iot.interfaces.rest.transform.CreateFeedingScheduleCommandFromResourceAssembler;
 import com.acme.web.services.iot.interfaces.rest.transform.FeedingScheduleResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
@@ -38,17 +43,36 @@ public class FeedingScheduleController {
     }
 
     // ✅ POST: crear nuevo horario (individual o global)
+    @Operation(
+            summary = "Crear horario de alimentación para una jaula o todas",
+            description = """
+        Este endpoint crea un horario de alimentación para una jaula específica o para todas las jaulas.
+
+        • Si deseas asignar el horario a una sola jaula, proporciona su cageId y deja applyToAll en false.
+
+        • Si deseas asignarlo a todas las jaulas que aún no tienen un horario, pon cageId en 0 y applyToAll en true.
+
+        Ejemplo para todas las jaulas:
+        {
+          "cageId": 0,
+          "morningTime": "07:00",
+          "eveningTime": "18:30",
+          "applyToAll": true
+        }
+        """
+    )
     @PostMapping
-    public ResponseEntity<FeedingScheduleResource> create(@RequestBody FeedingScheduleResource resource) {
+    public ResponseEntity<?> create(@RequestBody FeedingScheduleResource resource) {
         var command = CreateFeedingScheduleCommandFromResourceAssembler.toCommandFromResource(resource);
         Long id = commandService.handle(command);
 
-        // Si fue creación global, no devolvemos un recurso individual
+        // Si el id es 0 y applyToAll es true, significa que se aplica a todas las jaulas
         if (resource.applyToAll() || id == 0L) {
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(Map.of("message", "✅ Horario global aplicado a todas las jaulas sin duplicar."));
         }
 
-        // Buscar el FeedingSchedule creado y devolverlo como resource
         return queryService.handleGetFeedingScheduleByIdQuery(id)
                 .map(FeedingScheduleResourceFromEntityAssembler::toResourceFromEntity)
                 .map(createdResource ->
@@ -58,6 +82,7 @@ public class FeedingScheduleController {
                 )
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
+
 
     // ✅ PUT: actualizar horario existente
     @PutMapping("/{id}")
@@ -97,4 +122,12 @@ public class FeedingScheduleController {
         return ResponseEntity.ok(resource);
     }
 
+    @PutMapping("/global")
+    public ResponseEntity<?> updateAll(@RequestBody GlobalScheduleUpdateResource resource) {
+        commandService.handle(new HandleUpdateAllSchedules(
+                LocalTime.parse(resource.morningTime()),
+                LocalTime.parse(resource.eveningTime())
+        ));
+        return ResponseEntity.ok(Map.of("message", "✅ Horario actualizado en todas las jaulas"));
+    }
 }

@@ -4,6 +4,7 @@ import com.acme.web.services.iot.application.internal.eventhandlers.FeedingSched
 import com.acme.web.services.iot.application.internal.eventhandlers.FeedingScheduleUpdatedEvent;
 import com.acme.web.services.iot.domain.model.aggregates.FeedingSchedule;
 import com.acme.web.services.iot.domain.model.commands.CreateFeedingScheduleCommand;
+import com.acme.web.services.iot.domain.model.commands.HandleUpdateAllSchedules;
 import com.acme.web.services.iot.domain.model.commands.UpdateFeedingScheduleCommand;
 import com.acme.web.services.iot.domain.model.valueobjects.FeedingTime;
 import com.acme.web.services.iot.domain.services.FeedingScheduleCommandService;
@@ -82,5 +83,20 @@ public class FeedingScheduleCommandServiceImpl implements FeedingScheduleCommand
 
             return updatedSchedule;
         });
+    }
+
+    @Override
+    @Transactional
+    public void handle(HandleUpdateAllSchedules command) {
+        List<FeedingSchedule> allSchedules = feedingScheduleRepository.findAll();
+
+        for (FeedingSchedule schedule : allSchedules) {
+            schedule.setMorningTime(new FeedingTime(command.morningTime()));
+            schedule.setEveningTime(new FeedingTime(command.eveningTime()));
+            feedingScheduleRepository.save(schedule);
+
+            // Publicar evento para MQTT
+            eventPublisher.publishEvent(new FeedingScheduleUpdatedEvent(schedule));
+        }
     }
 }
