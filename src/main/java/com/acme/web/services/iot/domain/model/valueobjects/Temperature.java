@@ -10,4 +10,6 @@ public record Temperature(Double temperature) {
             throw new IllegalArgumentException("Temperature cannot be null or below absolute zero (-273.15°C)");
         }
     }
+
+
 }
