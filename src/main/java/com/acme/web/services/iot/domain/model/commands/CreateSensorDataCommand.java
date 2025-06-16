@@ -12,5 +12,6 @@ public record CreateSensorDataCommand(Double temperature,
                                       Double humidity,
                                       Integer co2,
                                       Double waterQuality,
-                                      Double waterQuantity) {
+                                      Double waterQuantity,
+                                      Long cageId) {
 }

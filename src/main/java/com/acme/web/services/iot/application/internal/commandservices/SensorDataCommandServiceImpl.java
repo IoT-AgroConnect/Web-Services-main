@@ -8,6 +8,8 @@ import com.acme.web.services.iot.domain.model.commands.UpdateSensorDataCommand;
 import com.acme.web.services.iot.domain.model.valueobjects.*;
 import com.acme.web.services.iot.domain.services.SensorDataCommandService;
 import com.acme.web.services.iot.infrastructure.persitence.jpa.repositories.SensorDataRepository;
+import com.acme.web.services.management.domain.model.aggregates.Cage;
+import com.acme.web.services.management.infrastructure.persitence.jpa.repositories.CageRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,9 +25,11 @@ import java.util.Optional;
 public class SensorDataCommandServiceImpl implements SensorDataCommandService {
 
     private final SensorDataRepository sensorDataRepository;
+    private final CageRepository cageRepository;
 
-    public SensorDataCommandServiceImpl(SensorDataRepository sensorDataRepository) {
+    public SensorDataCommandServiceImpl(SensorDataRepository sensorDataRepository, CageRepository cageRepository) {
         this.sensorDataRepository = sensorDataRepository;
+        this.cageRepository = cageRepository;
     }
 
     /**
@@ -36,12 +40,16 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
      */
     @Override
     public Long handle(CreateSensorDataCommand command) {
+        Cage cage = cageRepository.findById(command.cageId())
+                .orElseThrow(() -> new IllegalArgumentException("La jaula con ID " + command.cageId() + " no existe."));
+
         var sensorData = new SensorData(
                 new Temperature(command.temperature()),
                 new Humidity(command.humidity()),
                 new CO2(command.co2()),
                 new WaterQuality(command.waterQuality()),
-                new WaterQuantity(command.waterQuantity())
+                new WaterQuantity(command.waterQuantity()),
+                cage
         );
 
         try {
@@ -61,7 +69,7 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
      */
     @Override
     public Optional<SensorData> handle(UpdateSensorDataCommand command) {
-        return sensorDataRepository.findById(command.sensorDataId()).map(sensorData -> {
+        return sensorDataRepository.findById(command.Id()).map(sensorData -> {
             sensorData.setTemperature(new Temperature(command.temperature()));
             sensorData.setHumidity(new Humidity(command.humidity()));
             sensorData.setCo2(new CO2(command.co2()));
@@ -79,10 +87,10 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
      */
     @Override
     public Optional<SensorData> handle(DeleteSensorDataCommand command) {
-        if (!sensorDataRepository.existsById(command.sensorDataId())) {
-            throw new SensorDataNotFoundException(command.sensorDataId());
+        if (!sensorDataRepository.existsById(command.Id())) {
+            throw new SensorDataNotFoundException(command.Id());
         }
-        var sensorData = sensorDataRepository.findById(command.sensorDataId());
+        var sensorData = sensorDataRepository.findById(command.Id());
         sensorData.ifPresent(sensorDataRepository::delete);
         return sensorData;
     }
