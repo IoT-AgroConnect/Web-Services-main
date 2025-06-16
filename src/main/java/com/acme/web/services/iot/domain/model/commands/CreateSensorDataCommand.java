@@ -1,8 +1,4 @@
-package com.acme.web.services.iot.domain.model.commands;/**
- * @author Fiorella Jarama Peñaloza
- * @version 1.0
- */
-
+package com.acme.web.services.iot.domain.model.commands;
 /**
  * Descripción de la clase.
  *
