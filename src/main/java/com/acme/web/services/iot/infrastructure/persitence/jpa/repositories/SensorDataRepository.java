@@ -1,10 +1,10 @@
 package com.acme.web.services.iot.infrastructure.persitence.jpa.repositories;
 
 import com.acme.web.services.iot.domain.model.aggregates.SensorData;
-import com.acme.web.services.iot.domain.model.queries.GetAllSensorDataQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Fiorella Jarama Peñaloza
@@ -12,5 +12,6 @@ import java.util.List;
  */
 public interface SensorDataRepository extends JpaRepository<SensorData, Long> {
     List<SensorData> findAllById(Long id);
+    Optional<SensorData> findByCageId(Long cageId);
 }
 

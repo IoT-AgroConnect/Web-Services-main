@@ -16,6 +16,7 @@ public record AcceptableRangeResource(
         Double minWaterQuality,
         Double maxWaterQuality,
         Double minWaterQuantity,
-        Double maxWaterQuantity
+        Double maxWaterQuantity,
+        boolean applyToAll
 ) {
 }

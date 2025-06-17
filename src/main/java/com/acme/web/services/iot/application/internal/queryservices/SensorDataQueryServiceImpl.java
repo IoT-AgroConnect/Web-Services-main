@@ -5,6 +5,7 @@ package com.acme.web.services.iot.application.internal.queryservices;/**
 
 import com.acme.web.services.iot.domain.model.aggregates.SensorData;
 import com.acme.web.services.iot.domain.model.queries.GetAllSensorDataQuery;
+import com.acme.web.services.iot.domain.model.queries.GetSensorDataByCageIdQuery;
 import com.acme.web.services.iot.domain.model.queries.GetSensorDataByIdQuery;
 import com.acme.web.services.iot.domain.services.SensorDataQueryService;
 import com.acme.web.services.iot.infrastructure.persitence.jpa.repositories.SensorDataRepository;
@@ -35,5 +36,19 @@ public class SensorDataQueryServiceImpl implements SensorDataQueryService {
     @Override
     public Optional<SensorData> handle(GetSensorDataByIdQuery query) {
         return this.sensorDataRepository.findById(query.sensorDataId());
+    }
+
+    @Override
+    public Optional<SensorData> handle(GetSensorDataByCageIdQuery query) {
+        if (query.cageId() == null) {
+            return Optional.empty();
+        }
+        return this.sensorDataRepository.findByCageId(query.cageId());
+    }
+
+    @Override
+    public Optional<SensorData> handleGetSensorDataByIdQuery(Long id) {
+        return Optional.ofNullable(this.sensorDataRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sensor data with ID " + id + " not found.")));
     }
 }

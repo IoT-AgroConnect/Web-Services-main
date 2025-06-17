@@ -3,6 +3,7 @@ package com.acme.web.services.iot.application.internal.commandservices;
 import com.acme.web.services.iot.domain.model.aggregates.AcceptableRange;
 import com.acme.web.services.iot.domain.model.commands.CreateAcceptableRangeCommand;
 import com.acme.web.services.iot.domain.model.commands.DeleteAcceptableRangeCommand;
+import com.acme.web.services.iot.domain.model.commands.HandleUpdateAllAcceptableRanges;
 import com.acme.web.services.iot.domain.model.commands.UpdateAcceptableRangeCommand;
 import com.acme.web.services.iot.domain.model.valueobjects.*;
 import com.acme.web.services.iot.domain.services.AcceptableRangeCommandService;
@@ -66,6 +67,21 @@ public class AcceptableRangeCommandServiceImpl implements AcceptableRangeCommand
         return acceptableRangeRepository.findById(command.id()).map(range ->{
             acceptableRangeRepository.delete(range);
             return range;
+        });
+    }
+
+    @Override
+    public void handle(HandleUpdateAllAcceptableRanges command) {
+        if (command.minAcceptableRange() == null || command.maxAcceptableRange() == null) {
+            throw new IllegalArgumentException("Acceptable ranges must not be null");
+        }
+        if (command.minAcceptableRange() >= command.maxAcceptableRange()) {
+            throw new IllegalArgumentException("Minimum acceptable range must be less than maximum acceptable range");
+        }
+
+        acceptableRangeRepository.findAll().forEach(range -> {
+            range.setTemperatureRange(new TemperatureRange(command.minAcceptableRange(), command.maxAcceptableRange()));
+            acceptableRangeRepository.save(range);
         });
     }
 }

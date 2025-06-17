@@ -24,5 +24,6 @@ public class SensorDataEventHandler {
     @EventListener
     public void onCreated(SensorDataCreatedEvent event) {
         mqttPublisher.publishSensorDataToCage(event.sensorData());
+        System.out.println("✅ Publicado CREATE a MQTT");
     }
 }

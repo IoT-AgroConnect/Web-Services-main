@@ -4,8 +4,11 @@ package com.acme.web.services.iot.domain.services;
  * @version 1.0
  */
 
+import com.acme.web.services.iot.domain.model.aggregates.FeedingSchedule;
 import com.acme.web.services.iot.domain.model.aggregates.SensorData;
 import com.acme.web.services.iot.domain.model.queries.GetAllSensorDataQuery;
+import com.acme.web.services.iot.domain.model.queries.GetFeedingScheduleByCageIdQuery;
+import com.acme.web.services.iot.domain.model.queries.GetSensorDataByCageIdQuery;
 import com.acme.web.services.iot.domain.model.queries.GetSensorDataByIdQuery;
 
 import java.util.List;
@@ -19,4 +22,6 @@ import java.util.Optional;
 public interface SensorDataQueryService {
     List<SensorData> handle(GetAllSensorDataQuery query);
     Optional<SensorData> handle(GetSensorDataByIdQuery query);
+    Optional<SensorData> handle(GetSensorDataByCageIdQuery query);
+    Optional<SensorData> handleGetSensorDataByIdQuery(Long id);
 }

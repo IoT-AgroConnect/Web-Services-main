@@ -25,7 +25,8 @@ public class AcceptableRangeResourceFromEntityAssembler {
                 entity.getMinWaterQuality(),
                 entity.getMaxWaterQuality(),
                 entity.getMinWaterQuantity(),
-                entity.getMaxWaterQuantity()
+                entity.getMaxWaterQuantity(),
+                false
         );
     }
 }

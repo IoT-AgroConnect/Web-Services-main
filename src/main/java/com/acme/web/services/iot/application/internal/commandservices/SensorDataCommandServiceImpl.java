@@ -1,5 +1,6 @@
 package com.acme.web.services.iot.application.internal.commandservices;
 
+import com.acme.web.services.iot.application.internal.eventhandlers.SensorDataCreatedEvent;
 import com.acme.web.services.iot.domain.exceptions.SensorDataNotFoundException;
 import com.acme.web.services.iot.domain.model.aggregates.SensorData;
 import com.acme.web.services.iot.domain.model.commands.CreateSensorDataCommand;
@@ -10,6 +11,7 @@ import com.acme.web.services.iot.domain.services.SensorDataCommandService;
 import com.acme.web.services.iot.infrastructure.persitence.jpa.repositories.SensorDataRepository;
 import com.acme.web.services.management.domain.model.aggregates.Cage;
 import com.acme.web.services.management.infrastructure.persitence.jpa.repositories.CageRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,10 +28,14 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
 
     private final SensorDataRepository sensorDataRepository;
     private final CageRepository cageRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public SensorDataCommandServiceImpl(SensorDataRepository sensorDataRepository, CageRepository cageRepository) {
+    public SensorDataCommandServiceImpl(SensorDataRepository sensorDataRepository, CageRepository cageRepository,
+                                        ApplicationEventPublisher eventPublisher) {
         this.sensorDataRepository = sensorDataRepository;
         this.cageRepository = cageRepository;
+        this.eventPublisher = eventPublisher;
+
     }
 
     /**
@@ -42,7 +48,6 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
     public Long handle(CreateSensorDataCommand command) {
         Cage cage = cageRepository.findById(command.cageId())
                 .orElseThrow(() -> new IllegalArgumentException("La jaula con ID " + command.cageId() + " no existe."));
-
         var sensorData = new SensorData(
                 new Temperature(command.temperature()),
                 new Humidity(command.humidity()),
@@ -51,9 +56,9 @@ public class SensorDataCommandServiceImpl implements SensorDataCommandService {
                 new WaterQuantity(command.waterQuantity()),
                 cage
         );
-
         try {
             sensorDataRepository.save(sensorData);
+            eventPublisher.publishEvent(new SensorDataCreatedEvent(sensorData));
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar datos del sensor", e);
         }

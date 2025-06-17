@@ -16,5 +16,6 @@ public record CreateAcceptableRangeCommand(
         Double maxWaterQuality,
         Double minWaterQuantity,
         Double maxWaterQuantity,
-        Long cageId
+        Long cageId,
+        boolean applyToAll
 ) {}
