@@ -13,8 +13,8 @@ public record WaterQuantityRange(Double minWaterQuantity, Double maxWaterQuantit
         if (minWaterQuantity == null || maxWaterQuantity == null) {
             throw new IllegalArgumentException("Water quantity values cannot be null");
         }
-        if (minWaterQuantity < 0.0 || maxWaterQuantity > 100.0) {
-            throw new IllegalArgumentException("Water quantity must be between 0.0 and 100.0 liters");
+        if (minWaterQuantity < 0.0 || maxWaterQuantity > 1000.0) {
+            throw new IllegalArgumentException("Water quantity must be between 0.0 and 100.0 mL");
         }
         if (minWaterQuantity > maxWaterQuantity) {
             throw new IllegalArgumentException("Minimum water quantity cannot be greater than maximum water quantity");
