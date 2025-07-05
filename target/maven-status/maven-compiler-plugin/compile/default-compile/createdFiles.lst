@@ -150,6 +150,7 @@ com\acme\web\services\management\domain\model\valueobjects\Quantity.class
 com\acme\web\services\management\domain\model\valueobjects\Birthdate.class
 com\acme\web\services\management\application\internal\queryservices\CageQueryServiceImpl.class
 com\acme\web\services\iam\interfaces\rest\resources\RoleResource.class
+com\acme\web\services\iot\application\internal\eventhandlers\SensorThresholdAlertListener.class
 com\acme\web\services\management\domain\model\valueobjects\Size.class
 com\acme\web\services\publication\domain\model\commands\DeletePublicationCommand.class
 com\acme\web\services\user\domain\services\AdvisorQueryService.class
@@ -314,6 +315,7 @@ com\acme\web\services\iot\domain\model\valueobjects\WaterQualityRange.class
 com\acme\web\services\iot\domain\model\valueobjects\CO2Range.class
 com\acme\web\services\management\domain\exceptions\ResourceNameAlreadyExistsException.class
 com\acme\web\services\user\interfaces\rest\transform\BreederResourceFromEntityAssembler.class
+com\acme\web\services\alerts\SendGridEmailService.class
 com\acme\web\services\appointment\interfaces\rest\resources\CreateAppointmentResource.class
 com\acme\web\services\iam\domain\model\commands\SignUpCommand.class
 com\acme\web\services\publication\domain\model\valueobjects\PublicationContent.class

@@ -1,3 +1,4 @@
+D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\alerts\SendGridEmailService.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\appointment\application\internal\commandservices\AppointmentCommandServiceImpl.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\appointment\application\internal\commandservices\ReviewCommandServiceImpl.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\appointment\application\internal\queryservices\AppointmentQueryServiceImpl.java
@@ -91,6 +92,7 @@ D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-m
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\eventhandlers\SensorDataCreatedEvent.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\eventhandlers\SensorDataEventHandler.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\eventhandlers\SensorDataUpdateEvent.java
+D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\eventhandlers\SensorThresholdAlertListener.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\queryservices\AcceptableRangeQueryServiceImpl.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\queryservices\FeedingScheduleQueryServiceImpl.java
 D:\universidad\8tavo ciclo\iot\trabajo-final\Backend-Web-Services\Web-Services-main\src\main\java\com\acme\web\services\iot\application\internal\queryservices\SensorDataQueryServiceImpl.java
