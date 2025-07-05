@@ -81,4 +81,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return this;
     }
 
+    public String getEmail() {
+        return username;
+    }
 }
