@@ -3,6 +3,7 @@ package com.acme.web.services.iot.infrastructure.messaging.mqtt;
 import com.acme.web.services.iot.domain.model.aggregates.FeedingSchedule;
 import com.acme.web.services.iot.domain.model.aggregates.SensorData;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,9 +16,14 @@ public class MqttCommandPublisher {
     private final MqttClient client;
 
     public MqttCommandPublisher() throws MqttException {
-        this.client = new MqttClient("tcp://broker.hivemq.com:1883", MqttClient.generateClientId());
-        this.client.connect();
+        MqttClientPersistence persistence = new MemoryPersistence(); // evita carpetas basura
+        this.client = new MqttClient("tcp://broker.hivemq.com:1883", "iot-app-cuy-publisher", persistence);
+
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setCleanSession(true); // no guarda estado anterior
+        client.connect(options);
     }
+
 
     public void publishFeedingScheduleToCage(FeedingSchedule schedule) {
         String cageId = schedule.getCage().getId().toString();
