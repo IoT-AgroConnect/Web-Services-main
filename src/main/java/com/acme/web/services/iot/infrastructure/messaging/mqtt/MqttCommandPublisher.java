@@ -14,16 +14,23 @@ import org.springframework.stereotype.Component;
 public class MqttCommandPublisher {
 
     private final MqttClient client;
+    private final MqttConnectOptions options;
 
     public MqttCommandPublisher() throws MqttException {
         MqttClientPersistence persistence = new MemoryPersistence(); // evita carpetas basura
         this.client = new MqttClient("tcp://broker.hivemq.com:1883", "iot-app-cuy-publisher", persistence);
-
-        MqttConnectOptions options = new MqttConnectOptions();
+        this.options = new MqttConnectOptions();
         options.setCleanSession(true); // no guarda estado anterior
+        options.setAutomaticReconnect(true); // reconectar automáticamente si se pierde la conexión
+        options.setConnectionTimeout(10); // tiempo de espera de conexión en segundos
         client.connect(options);
     }
 
+    private void ensureConnected() throws MqttException {
+        if (!client.isConnected()) {
+            client.connect(options);
+        }
+    }
 
     public void publishFeedingScheduleToCage(FeedingSchedule schedule) {
         String cageId = schedule.getCage().getId().toString();
@@ -36,6 +43,7 @@ public class MqttCommandPublisher {
         );
 
         try {
+            ensureConnected();
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(1); // nivel de entrega: al menos una vez
             client.publish(topic, message);
@@ -53,6 +61,8 @@ public class MqttCommandPublisher {
         String cageId = sensorData.getCage().getId().toString();
 
         try {
+            ensureConnected();
+
             if (sensorData.getTemperature() != null) {
                 publishToTopic("cuys/sensores/" + cageId + "/temperatura", sensorData.getTemperature().toString());
             }
@@ -79,14 +89,11 @@ public class MqttCommandPublisher {
     }
 
     private void publishToTopic(String topic, String payload) throws MqttException {
+        ensureConnected();
         MqttMessage message = new MqttMessage(payload.getBytes());
         message.setQos(1);
         client.publish(topic, message);
         System.out.printf("Publicado a MQTT - Topic: %s | Payload: %s%n", topic, payload);
     }
-
-
-
-
 
 }
