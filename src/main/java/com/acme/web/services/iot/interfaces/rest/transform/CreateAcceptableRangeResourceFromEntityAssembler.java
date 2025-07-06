@@ -20,10 +20,10 @@ public class CreateAcceptableRangeResourceFromEntityAssembler {
                 acceptableRangeResource.maxHumidity(),
                 acceptableRangeResource.minCo2(),
                 acceptableRangeResource.maxCo2(),
-                acceptableRangeResource.minWaterQuantity(),
-                acceptableRangeResource.maxWaterQuantity(),
                 acceptableRangeResource.minWaterQuality(),
                 acceptableRangeResource.maxWaterQuality(),
+                acceptableRangeResource.minWaterQuantity(),
+                acceptableRangeResource.maxWaterQuantity(),
                 acceptableRangeResource.cageId(),
                 acceptableRangeResource.applyToAll()
         );
